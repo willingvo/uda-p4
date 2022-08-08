@@ -4,6 +4,9 @@ import { DocumentClient } from 'aws-sdk/clients/dynamodb'
 import { TodoItem } from '../models/TodoItem'
 import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
 import { createLogger } from '../utils/logger'
+import * as AWSXRay from 'aws-xray-sdk'
+
+const XAWS = AWSXRay.captureAWS(AWS)
 
 export class Todo {
 
@@ -100,5 +103,7 @@ export class Todo {
 }
 
 function createDynamoDBClient() {
-  return new AWS.DynamoDB.DocumentClient()
+  return new XAWS.DynamoDB.DocumentClient({
+    signatureVersion: 'v4'
+  })
 }
